@@ -17,12 +17,13 @@ class SettingsUpdaterException(Exception):
 
 
 class SettingsUpdater(object):
-    def __init__(self, parser, settings_path):
+    def __init__(self, parser, directory_path):
         self.parser = parser
-        self.settings_path = settings_path
+        self.directory_path = directory_path
 
     def update_single_module_settings(self, section_name):
-        module = importlib.import_module("{settings}.{name}_settings".format(name=section_name, settings=self.settings_path))
+        module = importlib.import_module("{directory}.{name}.{name}_settings".format(name=section_name,
+                                                                                     directory=self.directory_path))
         for argument, value in self.parser.items(section_name):
             param_type = type(getattr(module, argument, ""))
             if not param_type in SUPPORT_FORMATS_DICT:

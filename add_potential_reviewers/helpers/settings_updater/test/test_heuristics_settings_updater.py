@@ -7,8 +7,9 @@ from add_potential_reviewers.helpers.settings_updater.heuristics_settings_update
 
 class TestHeuristicSettingsUpdater(unittest.TestCase):
     def setUp(self):
+        self.fake_dir = "fake_directory"
         self.parser = MagicMock()
-        self.settings_updater = HeuristicsSettingsUpdater(self.parser)
+        self.settings_updater = HeuristicsSettingsUpdater(self.parser, self.fake_dir)
         self.settings_updater.update_single_module_settings = MagicMock()
 
     def test_if_attributes_were_passed_correctly(self):

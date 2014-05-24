@@ -3,16 +3,16 @@
 import unittest
 import importlib
 from mock import MagicMock, patch
-from add_potential_reviewers.helpers.settings_updater.common import SettingsUpdaterException
-from add_potential_reviewers.helpers.settings_updater.common import SettingsUpdater
+from add_potential_reviewers.helpers.settings_updater.common import SettingsUpdaterException, SettingsUpdater
 
 
 class TestGlobalsSettingsUpdater(unittest.TestCase):
     def setUp(self):
         self.parser = MagicMock()
-        self.settings_updater = SettingsUpdater(self.parser)
+        self.directory_path = "fake_path"
+        self.settings_updater = SettingsUpdater(self.parser, self.directory_path)
         self.test_settings_module_path = "add_potential_reviewers.helpers.settings_updater.test.common_settings_updater_test_data.settings"
-        self.section_name = "global"
+        self.section_name = "fake_heuristic"
 
     def test_if_attributes_were_passed_correctly(self):
         self.assertEquals(self.settings_updater.parser, self.parser)
@@ -39,7 +39,8 @@ class TestGlobalsSettingsUpdater(unittest.TestCase):
         self.parser.items.return_value = items_list + [("bool_setting", bool_setting), ("list_setting", list_setting)]
         self.settings_updater.update_single_module_settings(self.section_name)
 
-        importlib_mock.import_module.assert_called_once_with("add_potential_reviewers.settings.global_settings")
+        importlib_mock.import_module.assert_called_once_with(r"{path}.{name}.{name}_settings".format(path=self.directory_path,
+                                                                                                     name=self.section_name))
         self.parser.items.assert_called_once_with(self.section_name)
         for argument, value in items_list:
             value = expected_type_dict[argument](value)
