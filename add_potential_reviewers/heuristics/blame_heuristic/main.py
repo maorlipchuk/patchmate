@@ -13,20 +13,24 @@ class BlameHeuristic(HeuristicInterface):
         self.oldest_commit = oldest_commit
 
     def get_reviewers(self):
+        current_user_email = self.git_adapter.get_current_user_email()
         potential_reviewers = set([])
         commits_list = self.git_adapter.get_commits_from_range(self.youngest_commit, self.oldest_commit)
         for index, commit_hash in enumerate(commits_list):
-            if index == 0:
-                continue
+            commit_before = self.git_adapter.get_first_commit_hash_before_patch(self.oldest_commit) if index == 0 else commits_list[index - 1]
             for changed_file in self.git_adapter.get_changed_files_in_commit(commit_hash):
                 commit_info = self.git_adapter.get_concrete_file_commit_info(commit_hash, changed_file)
                 for line in original_line_numbers(commit_info):
-                    potential_reviewers.add(self.git_adapter.get_line_author(commits_list[index - 1], changed_file, line))
+                    potential_reviewers.add(self.git_adapter.get_line_author_email(commit_before, changed_file, line))
+
+        if current_user_email in potential_reviewers:
+            potential_reviewers.remove(current_user_email)
 
         return potential_reviewers
 
 
-
-
-
+repo_path = r"C:\Users\Tomasz\gsoc\django"
+yc = "6c1bc6d"
+oc = "392fe95"
+print BlameHeuristic(repo_path, yc, oc).get_reviewers()
 
