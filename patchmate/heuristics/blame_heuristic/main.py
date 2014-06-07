@@ -3,7 +3,7 @@
 
 from git_adapter import GitAdapter
 from blame_script import original_line_numbers
-from add_potential_reviewers.interface import HeuristicInterface
+from patchmate.interface import HeuristicInterface
 
 
 class BlameHeuristic(HeuristicInterface):

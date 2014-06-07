@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import importlib
-from add_potential_reviewers.helpers.logger import logger
+from patchmate.helpers.logger import logger
 from .converters import StrToFloatConverter, StrToBoolConverter, StrToListConverter, StrToIntConverter, StrToStrConverter
 
 

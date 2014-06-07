@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import re
-from add_potential_reviewers.helpers.logger import logger
+from patchmate.helpers.logger import logger
 
 
 class ConverterException(Exception):

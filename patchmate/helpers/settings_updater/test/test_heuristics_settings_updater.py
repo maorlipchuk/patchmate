@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from mock import MagicMock, patch
-from add_potential_reviewers.helpers.settings_updater.heuristics_settings_updater import HeuristicsSettingsUpdater
+from patchmate.helpers.settings_updater.heuristics_settings_updater import HeuristicsSettingsUpdater
 
 
 class TestHeuristicSettingsUpdater(unittest.TestCase):

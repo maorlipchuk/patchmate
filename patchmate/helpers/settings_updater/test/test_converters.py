@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
-from add_potential_reviewers.helpers.settings_updater.converters import StrToStrConverter, StrToIntConverter,\
+from patchmate.helpers.settings_updater.converters import StrToStrConverter, StrToIntConverter,\
     StrToListConverter, StrToBoolConverter, StrToFloatConverter, ConverterException
 
 

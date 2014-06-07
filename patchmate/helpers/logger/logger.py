@@ -3,7 +3,7 @@
 import logging
 
 
-logger = logging.getLogger("Add Potential Reviewers Logger")
+logger = logging.getLogger("PatchMate Logger")
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')

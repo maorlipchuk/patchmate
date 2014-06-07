@@ -5,13 +5,15 @@ Main part of script
 """
 import os
 import argparse
-from add_potential_reviewers.helpers.settings_updater import update_settings
-from add_potential_reviewers.heuristics.blame_heuristic.main import BlameHeuristic
+from patchmate.helpers.settings_updater import update_settings
+from patchmate.heuristics import BlameHeuristic
+
 
 
 def main(args):
     update_settings(args.config)
-    print '\n'.join(BlameHeuristic(args.repo_path, args.youngest_commit, args.oldest_commit).get_reviewers())
+
+    BlameHeuristic(args.repo_path, args.youngest_commit, args.oldest_commit).get_reviewers()
     print "Get reviewers from heuristics"
     print "Send an email"
     print "Update reviewers"

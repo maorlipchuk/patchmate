@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from commits_test_data import removed_one_line, replace_line_new_one, replace_line_two_ones, replace_line_two_ones_removed_one_line_add_one
-from add_potential_reviewers.heuristics.blame_heuristic.blame_script import original_line_numbers
+from patchmate.heuristics.blame_heuristic.blame_script import original_line_numbers
 
 
 def data_provider(fn_data_provider):
