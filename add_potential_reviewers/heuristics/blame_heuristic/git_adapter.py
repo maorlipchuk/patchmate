@@ -32,11 +32,3 @@ class GitAdapter(object):
 
     def get_first_commit_hash_before_patch(self, oldest_commit):
         return self._execute_command(get_first_commit_before_patch.format(since=oldest_commit)).strip()
-
-
-repo_path = r"C:\Users\Tomasz\gsoc\django"
-yc = "6c1bc6d"
-oc = "392fe95"
-f = 'django/http/multipartparser.py'
-print GitAdapter(repo_path).get_line_author_email(yc, f, 1)
-

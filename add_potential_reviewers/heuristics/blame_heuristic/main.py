@@ -27,10 +27,3 @@ class BlameHeuristic(HeuristicInterface):
             potential_reviewers.remove(current_user_email)
 
         return potential_reviewers
-
-
-repo_path = r"C:\Users\Tomasz\gsoc\django"
-yc = "6c1bc6d"
-oc = "392fe95"
-print BlameHeuristic(repo_path, yc, oc).get_reviewers()
-
