@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import smtplib
+from patchmate.helpers.logger import logger
+
+
+BODY = """From: {sender_email}
+To: {receivers}
+Subject: SUBJECT
+
+CONTENT
+"""
+
+
+class EmailSender(object):
+    def __init__(self, login, password, smtp_server, sender, receivers):
+        self.sender = sender
+        self.receivers = receivers
+        self.smtp_obj = smtplib.SMTP_SSL(smtp_server)
+        self.smtp_obj.login(login, password)
+
+    def send_notification(self):
+        try:
+            self.smtp_obj.sendmail(self.sender, self.receivers, BODY.format(sender_email=self.sender, receivers=', '.join(self.receivers)))
+            logger.info("Successfully sent email")
+        except smtplib.SMTPException as e:
+            logger.error(e)
