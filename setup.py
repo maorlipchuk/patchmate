@@ -4,10 +4,10 @@
 from setuptools import setup, find_packages
 
 
-setup(name='Add Potential Reviewers',
+setup(name='Patchmage',
       version='0.1',
-      author='Tomasz Kolek',
-      author_email='tomasz-kolek@o2.pl',
+      author='Tomasz Kolek, Maor Lipchuk',
+      author_email='tomasz-kolek@o2.pl, mlipchuk@redhat.com',
       scripts=["script/add_reviewers.py"],
       packages=find_packages()
       )
