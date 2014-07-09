@@ -30,13 +30,13 @@ class MetadataLineWrapper(object):
 
     def _add_receivers(self, key, result):
         content = re.match(r".*{}=(?P<content>.*)".format(key.upper()), self.line).group('content')
-        for maintainer in content.split(','):
-            maintainer = maintainer.strip()
-            if "group" in maintainer:
-                group_name = re.match(r'group:(?P<group_name>.*)', maintainer).group('group_name')
+        for potential_receiver in content.split(','):
+            potential_receiver = potential_receiver.strip()
+            if "group" in potential_receiver:
+                group_name = re.match(r'group:(?P<group_name>[A-Za-z0-9]*)', potential_receiver).group('group_name')
                 getattr(result, key.lower()).groups.append(group_name)
             else:
-                name, email = re.match(r'"(?P<name>.*)" <(?P<email>.*@.*)>', maintainer).groups()
+                name, email = re.match(r'"(?P<name>.*)" <(?P<email>.*@.*)>', potential_receiver).groups()
                 getattr(result, key.lower()).receivers.append((name, email))
 
     def _add_recursive_info(self, result):

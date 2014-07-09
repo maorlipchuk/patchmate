@@ -22,7 +22,7 @@ class ResultsContainer(object):
     def __iadd__(self, other):
         self.maintainers += other.maintainers
         self.cc += other.cc
-        self.recursive = other.recursive
+        #self._recursive = other.recursive
         return self
 
     @property
@@ -32,3 +32,5 @@ class ResultsContainer(object):
     @recursive.setter
     def recursive(self, value):
         self._recursive = bool(int(value))
+
+

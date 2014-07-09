@@ -40,7 +40,8 @@ class FileMetadataProcessor(AbstractMetaDataProcessor):
 
     def parse_metadata(self):
         with open(self.path) as f:
-            metadata = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE).group(1)
+            metadata_search_object = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE)
+            metadata = metadata_search_object.group(1) if metadata_search_object else None
         results = self._parse_metadata(metadata) if metadata else self._parse_metadata('')
         if results.recursive:
             results += DirectoryMetadataProcessor(os.path.dirname(self.path)).parse_metadata()
@@ -62,6 +63,5 @@ class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
             metadata = None
         results = self._parse_metadata(metadata) if metadata else self._parse_metadata('')
         if results.recursive:
-            print results.recursive
             results += DirectoryMetadataProcessor(os.path.dirname(self.directory_path)).parse_metadata()
         return results
