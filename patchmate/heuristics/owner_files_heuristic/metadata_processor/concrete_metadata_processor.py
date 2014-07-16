@@ -4,7 +4,7 @@ import re
 import os
 from abc import ABCMeta, abstractmethod
 from results_container import ResultsContainer
-from receivers import PotentialReceiver
+from receivers import PotentialReceiver, GroupOfPotentialReceivers
 from line_wrapper import MetadataLineWrapper
 
 
@@ -23,9 +23,6 @@ class AbstractMetaDataProcessor(object):
         for line in filter(None, metadata.splitlines()):
             metadata_line_object = MetadataLineWrapper(line)
             metadata_line_object.add_content(results)
-
-        results.maintainers.receivers = [PotentialReceiver(name, email) for name, email in results.maintainers.receivers]
-        results.cc.receivers = [PotentialReceiver(name, email) for name, email in results.cc.receivers]
         return results
 
     @abstractmethod
@@ -39,10 +36,14 @@ class FileMetadataProcessor(AbstractMetaDataProcessor):
         self.path = changed_file_path
 
     def parse_metadata(self):
-        with open(self.path) as f:
-            metadata_search_object = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE)
-            metadata = metadata_search_object.group(1) if metadata_search_object else None
+        if not os.path.exists(self.path):
+            metadata = None
+        else:
+            with open(self.path) as f:
+                metadata_search_object = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE)
+                metadata = metadata_search_object.group(1) if metadata_search_object else None
         results = self._parse_metadata(metadata) if metadata else self._parse_metadata('')
+        print self.path, results.recursive
         if results.recursive:
             results += DirectoryMetadataProcessor(os.path.dirname(self.path)).parse_metadata()
         return results
@@ -55,6 +56,7 @@ class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
 
     def parse_metadata(self):
         review_metadata = os.path.join(self.directory_path, 'review.metadata')
+
         if os.path.exists(review_metadata):
             with open(os.path.join(self.directory_path, 'review.metadata')) as f:
                 metadata = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE)

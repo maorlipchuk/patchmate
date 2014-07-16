@@ -33,8 +33,8 @@ class MetadataLineWrapper(object):
         for potential_receiver in content.split(','):
             potential_receiver = potential_receiver.strip()
             if "group" in potential_receiver:
-                group_name = re.match(r'group:(?P<group_name>[A-Za-z0-9]*)', potential_receiver).group('group_name')
-                getattr(result, key.lower()).groups.append(group_name)
+                group = re.match(r'group:(?P<group>[A-Za-z0-9_]*)', potential_receiver).group('group')
+                getattr(result, key.lower()).groups.append(group)
             else:
                 name, email = re.match(r'"(?P<name>.*)" <(?P<email>.*@.*)>', potential_receiver).groups()
                 getattr(result, key.lower()).receivers.append((name, email))

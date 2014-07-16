@@ -9,7 +9,7 @@ class ReceiversAndGroupsContainer(object):
 
     def __iadd__(self, other):
         self.receivers += other.receivers
-        self.groups += other.receivers
+        self.groups += other.groups
         return self
 
 
@@ -17,12 +17,12 @@ class ResultsContainer(object):
     def __init__(self):
         self.maintainers = ReceiversAndGroupsContainer()
         self.cc = ReceiversAndGroupsContainer()
-        self._recursive = 0
+        self._recursive = False
 
     def __iadd__(self, other):
         self.maintainers += other.maintainers
         self.cc += other.cc
-        #self._recursive = other.recursive
+        self._recursive = other.recursive
         return self
 
     @property

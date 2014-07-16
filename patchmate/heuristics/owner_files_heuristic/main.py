@@ -19,8 +19,7 @@ class OwnerFilesHeuristic(HeuristicInterface):
         for index, commit_hash in enumerate(commits_list):
             changed_files = changed_files.union(set(self.git_adapter.get_changed_files_in_commit(commit_hash)))
 
-        changed_files = [os.path.join(self.repo_path, os.path.normpath(path)) for path in changed_files]
-        return MetadataProcessor(changed_files).process()
+        return MetadataProcessor(self.repo_path, changed_files).process()
 
 
 
