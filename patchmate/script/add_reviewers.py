@@ -5,31 +5,25 @@ Main part of script
 """
 import os
 import argparse
+from patchmate.helpers.git_adapter.git_adapter import GitAdapter
 from patchmate.helpers.settings_updater import update_settings
 from patchmate.heuristics import BlameHeuristic, OwnerFilesHeuristic
 
 
-def _print_results(result):
-    print "MAINTAINERS"
-    for i in result.maintainers.receivers:
-        print i
-
-    print "CC"
-    for i in result.cc.receivers:
-        print i
+def verify_commits(repo_path, commit_hash1, commit_hash2):
+    git_adapter = GitAdapter(repo_path)
+    git_adapter.verify_commits_number(commit_hash1)
+    git_adapter.verify_commits_number(commit_hash2)
 
 
 def main(args):
-    #update_settings(args.config)
-    #reviewers = set([])
-    #BlameHeuristic(args.repo_path, args.youngest_commit, args.oldest_commit).get_reviewers()
-    #print "\n\n"
-    result = OwnerFilesHeuristic(args.repo_path, args.youngest_commit, args.oldest_commit).get_reviewers()
+    verify_commits(args.repo_path, args.youngest_commit, args.oldest_commit)
+    update_settings(args.config)
+    blame_result = BlameHeuristic(args.repo_path, args.youngest_commit, args.oldest_commit).get_reviewers()
+    owner_result = OwnerFilesHeuristic(args.repo_path, args.youngest_commit, args.oldest_commit).get_reviewers()
 
-    _print_results(result)
-
-    #print "Send an email"
-    #print "Update reviewers"
+    print "Send an email"
+    print "Update reviewers"
 
 
 if __name__ == "__main__":
