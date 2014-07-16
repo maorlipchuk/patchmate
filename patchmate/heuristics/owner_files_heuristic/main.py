@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
-from patchmate.heuristics.blame_heuristic.git_adapter import GitAdapter # For test, after them git adapter should be excluded to helpers
+from patchmate.helpers.git_adapter.git_adapter import GitAdapter
 from patchmate.interface import HeuristicInterface
 from metadata_processor.metadata_processor import MetadataProcessor
 

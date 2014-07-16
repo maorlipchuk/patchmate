@@ -6,13 +6,26 @@ from blame_heuristic_settings import git_log_command, get_changed_files_in_commi
 from blame_heuristic_settings import get_concrete_file_commit_info, git_blame_command, get_first_commit_before_patch
 
 
+class GitAdapterException(Exception):
+    pass
+
+
+class GitAdapterNotValidCommitHash(GitAdapterException):
+    pass
+
+
 class GitAdapter(object):
     def __init__(self, repository_path):
         self.repository_path = repository_path
-        print self.repository_path
 
     def _execute_command(self, command):
         return subprocess.check_output(command, cwd=self.repository_path, shell=True)
+
+    def verify_commits_number(self, commit_hash):
+        try:
+            self._execute_command("git cat-file -e {}".format(commit_hash))
+        except subprocess.CalledProcessError:
+            raise GitAdapterNotValidCommitHash("Commit hash {} is not valid in your repository".format(commit_hash))
 
     def get_current_user_email(self):
         return self._execute_command(get_email_command).strip()

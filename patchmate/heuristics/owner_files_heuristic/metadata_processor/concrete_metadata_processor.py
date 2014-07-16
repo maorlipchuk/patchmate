@@ -4,7 +4,6 @@ import re
 import os
 from abc import ABCMeta, abstractmethod
 from results_container import ResultsContainer
-from receivers import PotentialReceiver, GroupOfPotentialReceivers
 from line_wrapper import MetadataLineWrapper
 
 
