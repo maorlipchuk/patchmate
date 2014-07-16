@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 import unittest
+
 from mock import patch
-from patchmate.heuristics.blame_heuristic.git_adapter import GitAdapter
-import patchmate.heuristics.blame_heuristic.blame_heuristic_settings as commands_set
+
+from patchmate.helpers.git_adapter.git_adapter import GitAdapter
+import patchmate.helpers.git_adapter.blame_heuristic_settings as commands_set
 
 
 @patch("add_potential_reviewers.heuristics.blame_heuristic.git_adapter.subprocess.check_output")

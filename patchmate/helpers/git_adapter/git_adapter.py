@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import re
 import subprocess
-from blame_heuristic_settings import git_log_command, get_changed_files_in_commit, get_email_command
-from blame_heuristic_settings import get_concrete_file_commit_info, git_blame_command, get_first_commit_before_patch
+from commands import git_log_command, get_changed_files_in_commit, get_email_command, verify_commit
+from commands import get_concrete_file_commit_info, git_blame_command, get_first_commit_before_patch
 
 
 class GitAdapterException(Exception):
@@ -23,7 +23,7 @@ class GitAdapter(object):
 
     def verify_commits_number(self, commit_hash):
         try:
-            self._execute_command("git cat-file -e {}".format(commit_hash))
+            self._execute_command(verify_commit.format(commit_hash=commit_hash))
         except subprocess.CalledProcessError:
             raise GitAdapterNotValidCommitHash("Commit hash {} is not valid in your repository".format(commit_hash))
 
