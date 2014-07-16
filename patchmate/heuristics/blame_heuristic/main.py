@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from git_adapter import GitAdapter
+from patchmate.helpers.git_adapter.git_adapter import GitAdapter
 from blame_script import original_line_numbers
 from patchmate.interface import HeuristicInterface
 
