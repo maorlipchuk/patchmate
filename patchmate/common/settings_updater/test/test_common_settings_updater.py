@@ -3,7 +3,7 @@
 import unittest
 import importlib
 from mock import MagicMock, patch
-from patchmate.helpers.settings_updater.common import SettingsUpdaterException, SettingsUpdater
+from patchmate.common.settings_updater.common import SettingsUpdaterException, SettingsUpdater
 
 
 class TestGlobalsSettingsUpdater(unittest.TestCase):

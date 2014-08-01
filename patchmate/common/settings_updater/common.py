@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import importlib
-from patchmate.helpers.logger import logger
+from patchmate.common.logger import logger
 from .converters import StrToFloatConverter, StrToBoolConverter, StrToListConverter, StrToIntConverter, StrToStrConverter
 
 

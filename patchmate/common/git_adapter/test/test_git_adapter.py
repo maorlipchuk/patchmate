@@ -5,8 +5,8 @@ import unittest
 
 from mock import patch
 
-from patchmate.helpers.git_adapter.git_adapter import GitAdapter
-import patchmate.helpers.git_adapter.blame_heuristic_settings as commands_set
+from patchmate.common.git_adapter.git_adapter import GitAdapter
+import patchmate.common.git_adapter.blame_heuristic_settings as commands_set
 
 
 @patch("add_potential_reviewers.heuristics.blame_heuristic.git_adapter.subprocess.check_output")
