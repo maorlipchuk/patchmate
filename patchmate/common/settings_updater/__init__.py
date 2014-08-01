@@ -4,7 +4,7 @@ from ConfigParser import ConfigParser
 from .heuristics_settings_updater import HeuristicsSettingsUpdater
 
 
-def update_settings(config_file_path=None, heuristics_path="add_potential_reviewers.heuristics"):
+def update_settings(config_file_path=None, heuristics_path="patchmate.heuristics"):
     if not config_file_path:
         return
 

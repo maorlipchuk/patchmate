@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
-from patchmate.common.settings_updater.converters import StrToStrConverter, StrToIntConverter,\
-    StrToListConverter, StrToBoolConverter, StrToFloatConverter, ConverterException
+from patchmate.common.logger import logger
+from patchmate.common.settings_updater.converters import StrToStrConverter, StrToIntConverter, StrToListConverter
+from patchmate.common.settings_updater.converters import StrToBoolConverter, StrToFloatConverter
+from patchmate.common.settings_updater.exceptions import ConvertException
 
 
 class TestStrToStrConverter(unittest.TestCase):
     def setUp(self):
+        logger.disabled = True
         self.converter = StrToStrConverter()
 
     def test_convert_str_to_str(self):
@@ -16,6 +19,7 @@ class TestStrToStrConverter(unittest.TestCase):
 
 class TestStrToIntConverter(unittest.TestCase):
     def setUp(self):
+        logger.disabled = True
         self.converter = StrToIntConverter()
 
     def test_convert_number_str_to_int(self):
@@ -24,12 +28,13 @@ class TestStrToIntConverter(unittest.TestCase):
 
     def test_convert_float_str_to_int_should_raise_exception(self):
         data = "11.0"
-        with self.assertRaises(ConverterException):
+        with self.assertRaises(ConvertException):
             self.converter.convert(data)
 
 
 class TestStrToBoolConverter(unittest.TestCase):
     def setUp(self):
+        logger.disabled = True
         self.converter = StrToBoolConverter()
 
     def test_convert_true_str_to_bool(self):
@@ -44,12 +49,13 @@ class TestStrToBoolConverter(unittest.TestCase):
 
     def test_convert_number_str_to_bool_should_raise_exception(self):
         data = "11.0"
-        with self.assertRaises(ConverterException):
+        with self.assertRaises(ConvertException):
             self.converter.convert(data)
 
 
 class TestStrToFloatConverter(unittest.TestCase):
     def setUp(self):
+        logger.disabled = True
         self.converter = StrToFloatConverter()
 
     def test_convert_int_str_to_float(self):
@@ -62,12 +68,13 @@ class TestStrToFloatConverter(unittest.TestCase):
 
     def test_convert_str_to_float_should_raise_exception(self):
         data = "test"
-        with self.assertRaises(ConverterException):
+        with self.assertRaises(ConvertException):
             self.converter.convert(data)
 
 
 class TestStrToListConverter(unittest.TestCase):
     def setUp(self):
+        logger.disabled = True
         self.converter = StrToListConverter()
 
     def test_convert_list_str_without_spaces_after_commas_to_list(self):
@@ -84,7 +91,7 @@ class TestStrToListConverter(unittest.TestCase):
 
     def test_convert_str_not_startswith_open_bracket_should_raise_error(self):
         data = "1, 2,3]"
-        with self.assertRaises(ConverterException):
+        with self.assertRaises(ConvertException):
             self.converter.convert(data)
 
 

@@ -3,7 +3,8 @@
 import unittest
 import importlib
 from mock import MagicMock, patch
-from patchmate.common.settings_updater.common import SettingsUpdaterException, SettingsUpdater
+from patchmate.common.settings_updater.common import SettingsUpdater
+from patchmate.common.settings_updater.exceptions import SettingsUpdaterExceptionSettingTypeNotSupported
 
 
 class TestGlobalsSettingsUpdater(unittest.TestCase):
@@ -18,7 +19,7 @@ class TestGlobalsSettingsUpdater(unittest.TestCase):
         self.assertEquals(self.settings_updater.parser, self.parser)
         self.assertIsInstance(self.settings_updater, SettingsUpdater)
 
-    @patch("add_potential_reviewers.helpers.settings_updater.common.importlib")
+    @patch("patchmate.common.settings_updater.common.importlib")
     def test_update_settings_in_test_settings_module(self, importlib_mock):
         settings_module = importlib.import_module(self.test_settings_module_path)
         importlib_mock.import_module.return_value = settings_module
@@ -59,13 +60,13 @@ class TestGlobalsSettingsUpdater(unittest.TestCase):
         self.assertEquals(module_value_list_setting, ["changed1", "changed2"])
         self.assertIsInstance(module_value_list_setting, list)
 
-    @patch("add_potential_reviewers.helpers.settings_updater.common.importlib")
+    @patch("patchmate.common.settings_updater.common.importlib")
     def test_if_settings_updater_raise_error_when_param_in_settings_is_not_supported_type(self, importlib_mock):
         settings_module = importlib.import_module(self.test_settings_module_path)
         importlib_mock.import_module.return_value = settings_module
         not_supported_type = "(test, test2)"
         self.parser.items.return_value = [("not_supported_type", not_supported_type)]
-        with self.assertRaises(SettingsUpdaterException):
+        with self.assertRaises(SettingsUpdaterExceptionSettingTypeNotSupported):
             self.settings_updater.update_single_module_settings(self.section_name)
 
 

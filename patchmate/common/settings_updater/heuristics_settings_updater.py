@@ -8,7 +8,7 @@ from common import SettingsUpdater
 class HeuristicsSettingsUpdater(SettingsUpdater):
     @staticmethod
     def _get_heuristics_list():
-        heuristics_path = pkg_resources.resource_filename("add_potential_reviewers", "heuristics")
+        heuristics_path = pkg_resources.resource_filename("patchmate", "heuristics")
         return [directory for directory in os.listdir(heuristics_path) if os.path.isdir(os.path.join(heuristics_path, directory))]
 
     def update_settings(self):

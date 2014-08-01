@@ -16,7 +16,7 @@ class TestHeuristicSettingsUpdater(unittest.TestCase):
         self.assertEquals(self.settings_updater.parser, self.parser)
         self.assertIsInstance(self.settings_updater, HeuristicsSettingsUpdater)
 
-    @patch("add_potential_reviewers.helpers.settings_updater.heuristics_settings_updater.os")
+    @patch("patchmate.common.settings_updater.heuristics_settings_updater.os")
     def test_update_settings_will_execute_method_with_correct_arguments(self, os_mock):
         heuristic_names = ['heuristic1', 'heuristic2']
         file_names = ["__init__.py"]

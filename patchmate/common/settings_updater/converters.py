@@ -1,17 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import re
-from patchmate.common.logger import logger
-
-
-class ConverterException(Exception):
-    pass
+from .exceptions import ConvertException
+from ..logger import logger
 
 
 class ConverterInterface(object):
     def _raise_exception(self, exception_message):
         logger.error(exception_message)
-        raise ConverterException(exception_message)
+        raise ConvertException(exception_message)
 
     def convert(self, value):
         raise NotImplementedError()
