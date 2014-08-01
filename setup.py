@@ -9,5 +9,7 @@ setup(name='Patchmate',
       author='Tomasz Kolek, Maor Lipchuk',
       author_email='tomasz-kolek@o2.pl, mlipchuk@redhat.com',
       scripts=["patchmate/script/add_reviewers.py"],
+      requires=["mock",
+                "requests",],
       packages=find_packages()
       )
