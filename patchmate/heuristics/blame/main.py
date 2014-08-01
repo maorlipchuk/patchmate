@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from .blame_script import original_line_numbers
+from ..interface import HeuristicInterface
 from patchmate.common.git_adapter.git_adapter import GitAdapter
-from blame_script import original_line_numbers
-from patchmate.heuristics.interface import HeuristicInterface
 
 
 class BlameHeuristic(HeuristicInterface):
-    def __init__(self, repo_path, youngest_commit, oldest_commit):
-        self.git_adapter = GitAdapter(repo_path)
+    def __init__(self, repository_path, youngest_commit, oldest_commit):
+        self.git_adapter = GitAdapter(repository_path)
         self.youngest_commit = youngest_commit
         self.oldest_commit = oldest_commit
 
