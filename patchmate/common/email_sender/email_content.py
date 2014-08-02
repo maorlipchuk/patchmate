@@ -3,7 +3,7 @@
 
 
 EMAIL_CONTENT = """
-From: {sender_email}
+From: {sender}
 To: {receivers}
 CC: {cc_list}
 Subject: SUBJECT
