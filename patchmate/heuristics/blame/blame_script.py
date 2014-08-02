@@ -2,25 +2,28 @@
 # -*- coding: utf-8 -*-
 import re
 
-line_number_regexp = r'@@ -(?P<line_number>[[0-9]+)(,[0-9]+)? \+(?P<line_number2>[0-9]+)(,[0-9]+)? @@.*'
+line_number_regexp = r'@@ -(?P<removed_line>[[0-9]+)(,[0-9]+)? \+(?P<added_line>[0-9]+)(,[0-9]+)? @@.*'
 
 
 def original_line_numbers(commit_info):
     """
-    commit_hash -> only number.
+    Returns information about line number before changing
+
+    :param commit_info: Commit text info
+    :type commit_info: str
     """
-    line_number = 0
+    removed_line = count_changed_lines = 0
     result = set([])
-    count_changed_lines = 0
+
     for line in commit_info.splitlines():
         if line.startswith("+++") or line.startswith("---"):
             continue
 
         elif re.match(line_number_regexp, line):
-            line_number = int(re.match(line_number_regexp, line).group('line_number'))
-            line_number2 = int(re.match(line_number_regexp, line).group('line_number2'))
-            if line_number > line_number2:
-                result.add(line_number)
+            removed_line = int(re.match(line_number_regexp, line).group('removed_line'))
+            added_line = int(re.match(line_number_regexp, line).group('added_line'))
+            if removed_line > added_line:
+                result.add(removed_line)
 
         elif line.startswith('+'):
             # if code line is added
@@ -28,7 +31,7 @@ def original_line_numbers(commit_info):
 
         elif line.startswith('-'):
             # if code line is removed
-            result.add(line_number + count_changed_lines)
+            result.add(removed_line + count_changed_lines)
             count_changed_lines -= 1
 
     return result
