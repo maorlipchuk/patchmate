@@ -32,5 +32,3 @@ class ResultsContainer(object):
     @recursive.setter
     def recursive(self, value):
         self._recursive = bool(int(value))
-
-
