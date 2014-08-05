@@ -19,6 +19,3 @@ class OwnerFilesHeuristic(HeuristicInterface):
             changed_files = changed_files.union(set(self.git_adapter.get_changed_files_in_commit(commit_hash)))
 
         return MetadataProcessor(self.repo_path, changed_files).process()
-
-
-
