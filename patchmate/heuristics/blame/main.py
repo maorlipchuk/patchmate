@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from .blame_script import original_line_numbers
 from ..interface import HeuristicInterface
+from ..potential_reviewer_container import PotentialReviewer
 from patchmate.common.git_adapter.git_adapter import GitAdapter
 
 
@@ -43,7 +44,9 @@ class BlameHeuristic(HeuristicInterface):
 
     def _add_potential_reviewers_for_specified_file(self, commit_info, commit_before_current, changed_file):
         for line in original_line_numbers(commit_info):
-            self._potential_reviewers.append(self.git_adapter.get_line_author_email(commit_before_current, changed_file, line))
+            email = self.git_adapter.get_line_author_email(commit_before_current, changed_file, line)
+            name = email  # TEMPORARY
+            self._potential_reviewers.append(PotentialReviewer(name, email))
 
     def _get_potential_reviewers_for_specified_commit(self, current_commit_hash, commit_before_current):
         for changed_file in self.git_adapter.get_changed_files_in_commit(current_commit_hash):
