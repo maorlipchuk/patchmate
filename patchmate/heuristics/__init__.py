@@ -19,11 +19,13 @@ class ReviewersGetter(object):
 
     @property
     def result(self):
-        return self.get_reviwers()
+        return self._get_reviewers()
 
     def _get_reviewers(self):
         self._result['maintainers'] += BlameHeuristic(self.repo_path, self.youngest_commit, self.oldest_commit).get_reviewers()
         owner_result = OwnerFilesHeuristic(self.repo_path, self.youngest_commit, self.oldest_commit).get_reviewers()
+
         self._result['maintainers'] += owner_result['maintainers']
         self._result['cc'] += owner_result['cc']
+
         return self._result

@@ -29,8 +29,15 @@ class ResultsContainer(object):
         return self
 
     def __iter__(self):
-        return iter([self.maintainers, self.cc])
+        return iter([self.maintainers.receivers, self.cc.receivers])
 
+    def __getitem__(self, item):
+        if item == 'maintainers':
+            return self.maintainers.receivers
+        elif item == 'cc':
+            return self.cc.receivers
+        else:
+            raise KeyError("Key: {} does not exist in ResultContainer".format(item))
 
     @property
     def recursive(self):

@@ -40,7 +40,7 @@ class BlameHeuristic(HeuristicInterface):
         if current_user_email in potential_reviewers:
             potential_reviewers.remove(current_user_email)
 
-        return potential_reviewers
+        return list(potential_reviewers)
 
     def _add_potential_reviewers_for_specified_file(self, commit_info, commit_before_current, changed_file):
         for line in original_line_numbers(commit_info):
