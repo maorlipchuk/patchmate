@@ -4,13 +4,16 @@
 
 class ReceiversAndGroupsContainer(object):
     def __init__(self):
-        self.receivers = []
-        self.groups = []
+        self.receivers = set([])
+        self.groups = set([])
 
     def __iadd__(self, other):
-        self.receivers += other.receivers
-        self.groups += other.groups
+        self.receivers = self.receivers.union(other.receivers)
+        self.groups = self.groups.union(other.groups)
         return self
+
+    def __iter__(self):
+        return iter([self.receivers, self.groups])
 
 
 class ResultsContainer(object):
@@ -24,6 +27,10 @@ class ResultsContainer(object):
         self.cc += other.cc
         self._recursive = other.recursive
         return self
+
+    def __iter__(self):
+        return iter([self.maintainers, self.cc])
+
 
     @property
     def recursive(self):

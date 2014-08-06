@@ -6,10 +6,12 @@ from setuptools import setup, find_packages
 
 setup(name='Patchmate',
       version='0.1',
-      author='Tomasz Kolek, Maor Lipchuk',
-      author_email='tomasz-kolek@o2.pl, mlipchuk@redhat.com',
+      author='Tomasz Kolek, '
+             'Maor Lipchuk',
+      author_email='tomasz-kolek@o2.pl, '
+                   'mlipchuk@redhat.com',
       scripts=["patchmate/script/add_reviewers.py"],
       requires=["mock",
-                "requests",],
+                "requests"],
       packages=find_packages()
       )

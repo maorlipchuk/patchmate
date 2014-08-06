@@ -3,7 +3,7 @@
 import unittest
 
 from data_provider import data_provider
-from commits_test_data import removed_one_line, replace_line_new_one, replace_line_two_ones, replace_line_two_ones_removed_one_line_add_one
+from tests.unit.heuristics.blame.commits_test_data import removed_one_line, replace_line_new_one, replace_line_two_ones, replace_line_two_ones_removed_one_line_add_one
 from patchmate.heuristics.blame.blame_script import original_line_numbers
 
 

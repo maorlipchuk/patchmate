@@ -17,7 +17,6 @@ class MetadataLineWrapper(object):
             return "recursive"
         else:
             pass
-            #raise Exception("Unexpected line type")
 
     def _is_maintainer_line(self):
         return True if re.search(r"MAINTAINER", self.line) else False
@@ -34,10 +33,10 @@ class MetadataLineWrapper(object):
             potential_receiver = potential_receiver.strip()
             if "group" in potential_receiver:
                 group = re.match(r'group:(?P<group>[A-Za-z0-9_]*)', potential_receiver).group('group')
-                getattr(result, key.lower()).groups.append(group)
+                getattr(result, key.lower()).groups.add(group)
             else:
                 name, email = re.match(r'"(?P<name>.*)" <(?P<email>.*@.*)>', potential_receiver).groups()
-                getattr(result, key.lower()).receivers.append((name, email))
+                getattr(result, key.lower()).receivers.add((name, email))
 
     def _add_recursive_info(self, result):
         recursive_flag = re.match(".*RECURSIVE=(?P<number>[0-1])", self.line).group('number')

@@ -10,9 +10,9 @@ from line_wrapper import MetadataLineWrapper
 class AbstractMetaDataProcessor(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self):
-        self.begin_header = "@REVIEW-METADATA-BEGIN"
-        self.end_header = "@REVIEW-METADATA-END"
+    def __init__(self, begin_header="@REVIEW-METADATA-BEGIN", end_header="@REVIEW-METADATA-END"):
+        self.begin_header = begin_header
+        self.end_header = end_header
 
     def _get_empty_results_dict(self):
         return ResultsContainer()
@@ -38,11 +38,12 @@ class FileMetadataProcessor(AbstractMetaDataProcessor):
         if not os.path.exists(self.path):
             metadata = None
         else:
-            with open(self.path) as f:
-                metadata_search_object = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE)
+            with open(self.path) as metadata_file:
+                metadata_search_object = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header),
+                                                   metadata_file.read(),
+                                                   re.DOTALL | re.MULTILINE)
                 metadata = metadata_search_object.group(1) if metadata_search_object else None
         results = self._parse_metadata(metadata) if metadata else self._parse_metadata('')
-        print self.path, results.recursive
         if results.recursive:
             results += DirectoryMetadataProcessor(os.path.dirname(self.path)).parse_metadata()
         return results
@@ -53,12 +54,14 @@ class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
         super(DirectoryMetadataProcessor, self).__init__()
         self.directory_path = directory_path
 
-    def parse_metadata(self):
-        review_metadata = os.path.join(self.directory_path, 'review.metadata')
+    def parse_metadata(self, metadata_file_name="review.metadata"):
+        review_metadata = os.path.join(self.directory_path, metadata_file_name)
 
         if os.path.exists(review_metadata):
-            with open(os.path.join(self.directory_path, 'review.metadata')) as f:
-                metadata = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header), f.read(), re.DOTALL | re.MULTILINE)
+            with open(review_metadata) as metadata_file:
+                metadata = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header),
+                                     metadata_file.read(),
+                                     re.DOTALL | re.MULTILINE)
                 metadata = metadata.group(1) if metadata else None
         else:
             metadata = None

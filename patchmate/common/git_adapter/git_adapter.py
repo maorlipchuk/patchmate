@@ -64,7 +64,8 @@ class GitAdapter(object):
         :param commit_hash: Commit hash
         :type commit_hash: str
         """
-        return self._execute_command(get_changed_files_in_commit.format(commit_id=commit_hash)).splitlines()
+        output = self._execute_command(get_changed_files_in_commit.format(commit_id=commit_hash))
+        return re.match(r"(?P<content>.*)\ncommit {}".format(commit_hash), output, re.DOTALL).group('content').splitlines()
 
     def get_concrete_file_commit_info(self, commit_hash, file_path):
         """
