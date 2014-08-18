@@ -4,8 +4,9 @@ import re
 
 
 class MetadataLineWrapper(object):
-    def __init__(self, line):
+    def __init__(self, line, file_relative_path):
         self.line = line
+        self.file_relative_path = file_relative_path
         self.type = self._get_line_type()
 
     def _get_line_type(self):
@@ -33,10 +34,10 @@ class MetadataLineWrapper(object):
             potential_receiver = potential_receiver.strip()
             if "group" in potential_receiver:
                 group = re.match(r'group:(?P<group>[A-Za-z0-9_]*)', potential_receiver).group('group')
-                getattr(result, key.lower()).groups.add(group)
+                getattr(result, key.lower()).groups.add((group, self.file_relative_path))
             else:
                 name, email = re.match(r'"(?P<name>.*)" <(?P<email>.*@.*)>', potential_receiver).groups()
-                getattr(result, key.lower()).receivers.add((name, email))
+                getattr(result, key.lower()).receivers.add((name, email, self.file_relative_path))
 
     def _add_recursive_info(self, result):
         recursive_flag = re.match(".*RECURSIVE=(?P<number>[0-1])", self.line).group('number')

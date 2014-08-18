@@ -17,10 +17,10 @@ class AbstractMetaDataProcessor(object):
     def _get_empty_results_dict(self):
         return ResultsContainer()
 
-    def _parse_metadata(self, metadata):
+    def _parse_metadata(self, metadata, file_relative_path):
         results = self._get_empty_results_dict()
         for line in filter(None, metadata.splitlines()):
-            metadata_line_object = MetadataLineWrapper(line)
+            metadata_line_object = MetadataLineWrapper(line, file_relative_path)
             metadata_line_object.add_content(results)
         return results
 
@@ -30,9 +30,10 @@ class AbstractMetaDataProcessor(object):
 
 
 class FileMetadataProcessor(AbstractMetaDataProcessor):
-    def __init__(self, changed_file_path):
+    def __init__(self, changed_file_path, changed_file_relative_path):
         super(FileMetadataProcessor, self).__init__()
         self.path = changed_file_path
+        self.changed_file_relative_path = changed_file_relative_path
 
     def parse_metadata(self):
         if not os.path.exists(self.path):
@@ -43,16 +44,22 @@ class FileMetadataProcessor(AbstractMetaDataProcessor):
                                                    metadata_file.read(),
                                                    re.DOTALL | re.MULTILINE)
                 metadata = metadata_search_object.group(1) if metadata_search_object else None
-        results = self._parse_metadata(metadata) if metadata else self._parse_metadata('')
+
+        if metadata:
+            results = self._parse_metadata(metadata, self.changed_file_relative_path)
+        else:
+            results = self._parse_metadata('', self.changed_file_relative_path)
+
         if results.recursive:
-            results += DirectoryMetadataProcessor(os.path.dirname(self.path)).parse_metadata()
+            results += DirectoryMetadataProcessor(os.path.dirname(self.path), os.path.dirname(self.changed_file_relative_path)).parse_metadata()
         return results
 
 
 class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
-    def __init__(self, directory_path):
+    def __init__(self, directory_path, directory_relative_path):
         super(DirectoryMetadataProcessor, self).__init__()
         self.directory_path = directory_path
+        self.directory_relative_path = directory_relative_path
 
     def parse_metadata(self, metadata_file_name="review.metadata"):
         review_metadata = os.path.join(self.directory_path, metadata_file_name)
@@ -65,7 +72,9 @@ class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
                 metadata = metadata.group(1) if metadata else None
         else:
             metadata = None
-        results = self._parse_metadata(metadata) if metadata else self._parse_metadata('')
+        results = self._parse_metadata(metadata, self.directory_relative_path) if metadata else self._parse_metadata('', self.directory_relative_path)
         if results.recursive:
-            results += DirectoryMetadataProcessor(os.path.dirname(self.directory_path)).parse_metadata()
+            directory_path_dirname = os.path.dirname(self.directory_path)
+            directory_relative_path_dirname = os.path.dirname(self.directory_relative_path)
+            results += DirectoryMetadataProcessor(directory_path_dirname, directory_relative_path_dirname).parse_metadata()
         return results

@@ -34,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument("--gerrit-username", "-gu", help="Gerrit username", required=True)
     parser.add_argument("--gerrit-password", "-gp", help="Gerrit password", required=True)
     parser.add_argument("--gerrit-url", "-gurl", help="Gerrit url", required=True)
-    parser.add_argument("--change-id", "-ci", help="Gerrit change_id", required=True)
+    parser.add_argument("--change-id", "-ci", help="Gerrit change id", required=True)
     parser.add_argument("--config", "-c", help="Ini configuration files path", default=None)
     parser.add_argument("--repo-path", "-rp", help="Git repository path", default=os.getcwd())
     args = parser.parse_args()

@@ -12,8 +12,9 @@ class PotentialReceiver(PotentialReviewer):
 class GroupOfPotentialReceivers(object):
     groups_file_content = None
 
-    def __init__(self, name):
-        self.group_name = name
+    def __init__(self, group_info):
+        self.group_name = group_info[0]
+        self.group_file_path = group_info[1]
         self.receivers = []
 
     def __str__(self):
@@ -36,7 +37,8 @@ class GroupOfPotentialReceivers(object):
                 self.receivers += GroupOfPotentialReceivers(group).get_emails(project_root)
             else:
                 name, email = re.match(r'"(?P<name>.*)" <(?P<email>.*@.*)>', potential_receiver).groups()
-                self.receivers.append(PotentialReceiver(name, email))
+                potential_receiver = PotentialReceiver(name, email, self.group_file_path)
+                self.receivers.append(potential_receiver)
         return self.receivers
 
     def get_emails(self, project_root):

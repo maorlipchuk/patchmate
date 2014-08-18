@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import re
 import subprocess
-from commands import git_log_command, get_changed_files_in_commit, get_email_command, verify_commit
-from commands import get_concrete_file_commit_info, git_blame_command, get_first_commit_before_patch
+from commands import git_log_command, get_changed_files_in_commit, get_email_command, verify_commit, git_blame_command_name
+from commands import get_concrete_file_commit_info, git_blame_command_email, get_first_commit_before_patch
 from exceptions import GitAdapterNotValidCommitHash
 
 
@@ -92,8 +92,24 @@ class GitAdapter(object):
         :param line: Line number
         :type line: int
         """
-        line = self._execute_command(git_blame_command.format(commit_id=commit_hash, file_path=file_path, line=line))
-        return re.match(r".* \(<(?P<email>.*@.*)>.*".format(commit_hash), line.strip()).group('email')
+        line = self._execute_command(git_blame_command_email.format(commit_id=commit_hash, file_path=file_path, line=line))
+        return re.match(r".* \(<(?P<email>.*@.*)>.*", line.strip()).group('email')
+
+    def get_line_author_name(self, commit_hash, file_path, line):
+        """
+        Gets name of person who made specified line in specified file in specified commit
+
+        :param commit_hash: Commit hash
+        :type commit_hash: str
+
+        :param file_path: Path to file
+        :type file_path: str
+
+        :param line: Line number
+        :type line: int
+        """
+        line = self._execute_command(git_blame_command_name.format(commit_id=commit_hash, file_path=file_path, line=line))
+        return re.match(r".* \((?P<name>.*) \d{4}-\d{2}-\d{2} .*", line.strip()).group('name')
 
     def get_first_commit_hash_before_given(self, commit_hash):
         """

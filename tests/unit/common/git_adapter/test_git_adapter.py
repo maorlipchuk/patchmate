@@ -60,7 +60,7 @@ class TestGitAdapter(unittest.TestCase):
         command_output = "{commit_id} (<{email}> 2008-07-01 15:10:51 +0000 1)\n".format(commit_id=commit_id, email=expected_email)
         check_output_mock.return_value = command_output
         value = self.git_adapter.get_line_author_email(commit_id, file_path, line_number)
-        check_output_mock.assert_called_once_with(commands_set.git_blame_command.format(commit_id=commit_id, file_path=file_path, line=line_number), shell=True, cwd=self.repository_path)
+        check_output_mock.assert_called_once_with(commands_set.git_blame_command_email.format(commit_id=commit_id, file_path=file_path, line=line_number), shell=True, cwd=self.repository_path)
         self.assertEqual(value, expected_email)
 
     def test_get_first_commit_hash_before_patch(self, check_output_mock):

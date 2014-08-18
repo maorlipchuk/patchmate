@@ -45,8 +45,10 @@ class BlameHeuristic(HeuristicInterface):
     def _add_potential_reviewers_for_specified_file(self, commit_info, commit_before_current, changed_file):
         for line in original_line_numbers(commit_info):
             email = self.git_adapter.get_line_author_email(commit_before_current, changed_file, line)
-            name = email  # TEMPORARY
-            self._potential_reviewers.append(PotentialReviewer(name, email))
+            name = self.git_adapter.get_line_author_name(commit_before_current, changed_file, line)
+            potential_reviewer = PotentialReviewer(name, email)
+            potential_reviewer.files.append(changed_file)
+            self._potential_reviewers.append(potential_reviewer)
 
     def _get_potential_reviewers_for_specified_commit(self, current_commit_hash, commit_before_current):
         for changed_file in self.git_adapter.get_changed_files_in_commit(current_commit_hash):
