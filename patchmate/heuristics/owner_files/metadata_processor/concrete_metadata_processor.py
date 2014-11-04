@@ -5,6 +5,7 @@ import os
 from abc import ABCMeta, abstractmethod
 from results_container import ResultsContainer
 from line_wrapper import MetadataLineWrapper
+from patchmate.common.logger import logger
 
 
 class AbstractMetaDataProcessor(object):
@@ -37,20 +38,22 @@ class FileMetadataProcessor(AbstractMetaDataProcessor):
 
     def parse_metadata(self):
         if not os.path.exists(self.path):
-            metadata = None
+            logger.debug("File {} doesn't exist".format(self.path))
+            metadata = ""
         else:
             with open(self.path) as metadata_file:
                 metadata_search_object = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header),
                                                    metadata_file.read(),
                                                    re.DOTALL | re.MULTILINE)
-                metadata = metadata_search_object.group(1) if metadata_search_object else None
+                if metadata_search_object:
+                    metadata = metadata_search_object.group(1)
+                    logger.info("Metadata has been found in {}".format(self.path))
+                else:
+                    metadata = ""
+                    logger.info("Metadata has not been found in {}".format(self.path))
 
-        if metadata:
-            results = self._parse_metadata(metadata, self.changed_file_relative_path)
-        else:
-            results = self._parse_metadata('', self.changed_file_relative_path)
-
-        if results.recursive:
+        results = self._parse_metadata(metadata, self.changed_file_relative_path)
+        if results.recursive != "0":
             results += DirectoryMetadataProcessor(os.path.dirname(self.path), os.path.dirname(self.changed_file_relative_path)).parse_metadata()
         return results
 
@@ -60,19 +63,23 @@ class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
         super(DirectoryMetadataProcessor, self).__init__()
         self.directory_path = directory_path
         self.directory_relative_path = directory_relative_path
+        logger.debug("DirectoryMetadataProcessor object was created with \n"
+                     " -directory path = {}".format(self.directory_path))
 
     def parse_metadata(self, metadata_file_name="review.metadata"):
         review_metadata = os.path.join(self.directory_path, metadata_file_name)
 
         if os.path.exists(review_metadata):
+            logger.debug("Review metadata file has been found for {}".format(self.directory_path))
             with open(review_metadata) as metadata_file:
                 metadata = re.search('{begin}(.*){end}'.format(begin=self.begin_header, end=self.end_header),
                                      metadata_file.read(),
                                      re.DOTALL | re.MULTILINE)
                 metadata = metadata.group(1) if metadata else None
         else:
-            metadata = None
-        results = self._parse_metadata(metadata, self.directory_relative_path) if metadata else self._parse_metadata('', self.directory_relative_path)
+            metadata = ""
+            logger.debug("Review metadata file has not been for {}".format(self.directory_path))
+        results = self._parse_metadata(metadata, self.directory_relative_path)
         if results.recursive:
             directory_path_dirname = os.path.dirname(self.directory_path)
             directory_relative_path_dirname = os.path.dirname(self.directory_relative_path)
