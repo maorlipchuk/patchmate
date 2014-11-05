@@ -54,7 +54,11 @@ class FileMetadataProcessor(AbstractMetaDataProcessor):
 
         results = self._parse_metadata(metadata, self.changed_file_relative_path)
         if results.recursive != "0":
-            results += DirectoryMetadataProcessor(os.path.dirname(self.path), os.path.dirname(self.changed_file_relative_path)).parse_metadata()
+            try:
+                results += DirectoryMetadataProcessor(os.path.dirname(self.path), os.path.dirname(self.changed_file_relative_path)).parse_metadata()
+            except Exception as e:
+                logger.error(e)
+                logger.error("Problem with review metadata from {}".format(os.path.dirname(self.path)))
         return results
 
 
@@ -83,5 +87,9 @@ class DirectoryMetadataProcessor(AbstractMetaDataProcessor):
         if results.recursive:
             directory_path_dirname = os.path.dirname(self.directory_path)
             directory_relative_path_dirname = os.path.dirname(self.directory_relative_path)
-            results += DirectoryMetadataProcessor(directory_path_dirname, directory_relative_path_dirname).parse_metadata()
+            try:
+                results += DirectoryMetadataProcessor(directory_path_dirname, directory_relative_path_dirname).parse_metadata()
+            except Exception as e:
+                logger.error(e)
+                logger.error("Problem with review metadata from {}".format(directory_path_dirname))
         return results
