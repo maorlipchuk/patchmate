@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-from ..logger import logger
+from patchmate.common.logger import logger
 
 
 class GerritAdapter(object):
@@ -44,7 +44,7 @@ class GerritAdapter(object):
         add_reviewer_json = json.dumps({"reviewer": user_unique_name})
         url = self._make_url("/a/changes/{}/reviewers/".format(change_id))
         response = self.session.post(url, data=add_reviewer_json, auth=self.auth, headers={'content-type': 'application/json'})
-        self._check_status_code(response)
+        return self._check_status_code(response)
 
     def get_reviewers_from_change_by_info(self, change_id, code_review=None):
         url = self._make_url("/a/changes/{}/reviewers/".format(change_id))
@@ -70,7 +70,16 @@ class GerritAdapter(object):
     def _check_status_code(self, response):
         if response.status_code == 200:
             logger.info("{}: {}".format(response.status_code, response.text))
+            return True
         elif response.status_code == 422:
             logger.warning("{}: {}".format(response.status_code, response.text))
         else:
             logger.warning("{}: {}".format(response.status_code, response.text))
+        return False
+
+
+"""
+Implement lambda comparators function
+Heuristics fix
+Add script for merging it.
+"""
