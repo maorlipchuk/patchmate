@@ -44,30 +44,40 @@ class GerritAdapter(object):
         add_reviewer_json = json.dumps({"reviewer": user_unique_name})
         url = self._make_url("/a/changes/{}/reviewers/".format(change_id))
         response = self.session.post(url, data=add_reviewer_json, auth=self.auth, headers={'content-type': 'application/json'})
-        return self._check_status_code(response)
+        return GerritAdapter._check_status_code(response)
 
-    def get_reviewers_from_change_by_info(self, change_id, code_review=None):
+    def get_reviewers_from_change_by_info(self, change_id, code_review_grade=None):
+        """
+        Gets reviewers from change
+        :param change_id: Change in gerrit
+        :param code_review_grade: Minimum acceptance criteria of code review grade
+        :return: List of reviewers who meet conditions
+        """
         url = self._make_url("/a/changes/{}/reviewers/".format(change_id))
         response = self.session.get(url, auth=self.auth, headers={'content-type': 'application/json'})
-        self._check_status_code(response)
-        response_json = self._get_json(response)
-        reviewers_meet_conditions = self._get_reviewers_meet_conditions(response_json, code_review)
+        GerritAdapter._check_status_code(response)
+        response_json = GerritAdapter._get_json(response)
+        reviewers_meet_conditions = GerritAdapter._get_reviewers_meet_conditions(response_json, code_review_grade)
         return reviewers_meet_conditions
-
-    def _get_reviewers_meet_conditions(self, reviewers_json_list, code_review):
-        return [reviewer_dict for reviewer_dict in reviewers_json_list if self._meet_reviewer_conditions(reviewer_dict, code_review)]
-
-    def _meet_reviewer_conditions(self, reviewer_dict, code_review):
-        return code_review is None or int(reviewer_dict['approvals']['Code-Review']) >= int(code_review)
-
-    def _get_json(self, response, json_prefix=")]}'"):
-        text = response.text[len(json_prefix):] if response.text.startswith(json_prefix) else response.text
-        return json.loads(text) if isinstance(text, (unicode, str)) else json.load(text)
 
     def _make_url(self, endpoint):
         return "{}{}".format(self.url, endpoint)
 
-    def _check_status_code(self, response):
+    @staticmethod
+    def _get_reviewers_meet_conditions(reviewers_json_list, code_review):
+        return [reviewer_dict for reviewer_dict in reviewers_json_list if GerritAdapter._meet_reviewer_conditions(reviewer_dict, code_review)]
+
+    @staticmethod
+    def _meet_reviewer_conditions(reviewer_dict, code_review_grade):
+        return code_review_grade is None or int(reviewer_dict['approvals']['Code-Review']) >= int(code_review_grade)
+
+    @staticmethod
+    def _get_json(response, json_prefix=")]}'"):
+        text = response.text[len(json_prefix):] if response.text.startswith(json_prefix) else response.text
+        return json.loads(text) if isinstance(text, (unicode, str)) else json.load(text)
+
+    @staticmethod
+    def _check_status_code(response):
         if response.status_code == 200:
             logger.info("{}: {}".format(response.status_code, response.text))
             return True
@@ -76,10 +86,3 @@ class GerritAdapter(object):
         else:
             logger.warning("{}: {}".format(response.status_code, response.text))
         return False
-
-
-"""
-Implement lambda comparators function
-Heuristics fix
-Add script for merging it.
-"""
